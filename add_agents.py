@@ -8,6 +8,8 @@ import json
 import argparse
 import logging
 import logging.handlers
+import os
+from xml.dom import minidom
 
 log = logging.getLogger(__name__)
 
@@ -334,7 +336,9 @@ def init_log(args):
         level = logging.INFO
 
     log.setLevel(level)
-    fh = logging.FileHandler('add_host.log')
+    if not os.path.exists("log"):
+        os.mkdir("log")
+    fh = logging.FileHandler(os.path.join('log','add_host.log'))
     fh.setLevel(level)
 
     ch = logging.StreamHandler()
@@ -452,14 +456,28 @@ def main():
         
         log.info("Finish")
 
+def get_template_name(file):
+
+    dom = minidom.parse(file)
+    root = dom.documentElement
+
+    template = root.getElementsByTagName("template")
+    t_name = ""
+    for t in template:
+        tt = t.getElementsByTagName("name")
+        if tt: 
+            t_name = tt[0].childNodes[0].nodeValue
+            log.info("Get template name %s from %s", t_name, file)
+            break
+    return t_name
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Auto config zabbix server. \
-            1 auto add hosts to server.\
-            2 applay the template to each host.  \
-            3 create screen for each host.")
+            1 auto add hosts to zabbix server.\
+            2 applay the template to each agents.  \
+            3 auto create screen(\"screen-$hostname\" for each agent.")
     parser.add_argument('-f', '--hostfile', dest='hostsfile', type=str, help="file contain hosts' name and ip address", required=True)
-    parser.add_argument('-T', '--template', dest='templatefile', type=str, default="template.xml", help="templates xml file", required=False)
+    parser.add_argument('-T', '--template', dest='templatefile', type=str, default=os.path.join("conf","template.xml"), help="templates xml file", required=False)
     parser.add_argument('-c', '--columns', dest='columns', default=3, type=int, help="number of columns in the screen", required=False)
     parser.add_argument('-S', '--ip', dest='server', type=str, help="zabbix server ip", required=True)
     parser.add_argument('-g', '--groupname', dest='groupname', default="yhr_group", type=str, help="hostgroup name", required=False)
@@ -478,6 +496,6 @@ if __name__ == '__main__':
     hostgroup = args.groupname
     columns = args.columns
     templatefile = args.templatefile
-    template_name = 'yhr'
+    template_name = get_template_name(templatefile)
 
     main()
