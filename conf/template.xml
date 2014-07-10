@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>2.0</version>
-    <date>2014-07-08T05:58:39Z</date>
+    <date>2014-07-09T01:50:32Z</date>
     <groups>
         <group>
             <name>Virtual machines</name>
@@ -77,6 +77,48 @@
                     <multiplier>0</multiplier>
                     <snmp_oid/>
                     <key>system.cpu.util[,iowait]</key>
+                    <delay>30</delay>
+                    <history>90</history>
+                    <trends>365</trends>
+                    <status>0</status>
+                    <value_type>0</value_type>
+                    <allowed_hosts/>
+                    <units>%</units>
+                    <delta>0</delta>
+                    <snmpv3_contextname/>
+                    <snmpv3_securityname/>
+                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_authpassphrase/>
+                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privpassphrase/>
+                    <formula>1</formula>
+                    <delay_flex/>
+                    <params/>
+                    <ipmi_sensor/>
+                    <data_type>0</data_type>
+                    <authtype>0</authtype>
+                    <username/>
+                    <password/>
+                    <publickey/>
+                    <privatekey/>
+                    <port/>
+                    <description/>
+                    <inventory_link>0</inventory_link>
+                    <applications>
+                        <application>
+                            <name>CPU</name>
+                        </application>
+                    </applications>
+                    <valuemap/>
+                </item>
+                <item>
+                    <name>Cpu Utilization system</name>
+                    <type>0</type>
+                    <snmp_community/>
+                    <multiplier>0</multiplier>
+                    <snmp_oid/>
+                    <key>system.cpu.util[,system]</key>
                     <delay>30</delay>
                     <history>90</history>
                     <trends>365</trends>
@@ -209,7 +251,7 @@
                     <status>0</status>
                     <value_type>0</value_type>
                     <allowed_hosts/>
-                    <units>ops</units>
+                    <units>ops/s</units>
                     <delta>0</delta>
                     <snmpv3_contextname/>
                     <snmpv3_securityname/>
@@ -293,7 +335,7 @@
                     <status>0</status>
                     <value_type>0</value_type>
                     <allowed_hosts/>
-                    <units>OPS</units>
+                    <units>ops/s</units>
                     <delta>0</delta>
                     <snmpv3_contextname/>
                     <snmpv3_securityname/>
@@ -435,19 +477,7 @@
                 <graph_item>
                     <sortorder>0</sortorder>
                     <drawtype>0</drawtype>
-                    <color>C80000</color>
-                    <yaxisside>0</yaxisside>
-                    <calc_fnc>2</calc_fnc>
-                    <type>0</type>
-                    <item>
-                        <host>yhr</host>
-                        <key>system.cpu.util[,user]</key>
-                    </item>
-                </graph_item>
-                <graph_item>
-                    <sortorder>1</sortorder>
-                    <drawtype>0</drawtype>
-                    <color>00C800</color>
+                    <color>C800C8</color>
                     <yaxisside>0</yaxisside>
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
@@ -457,15 +487,39 @@
                     </item>
                 </graph_item>
                 <graph_item>
-                    <sortorder>2</sortorder>
+                    <sortorder>1</sortorder>
                     <drawtype>0</drawtype>
-                    <color>0000C8</color>
+                    <color>00C8C8</color>
                     <yaxisside>0</yaxisside>
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
                         <host>yhr</host>
                         <key>system.cpu.util[,iowait]</key>
+                    </item>
+                </graph_item>
+                <graph_item>
+                    <sortorder>2</sortorder>
+                    <drawtype>0</drawtype>
+                    <color>C8C800</color>
+                    <yaxisside>0</yaxisside>
+                    <calc_fnc>2</calc_fnc>
+                    <type>0</type>
+                    <item>
+                        <host>yhr</host>
+                        <key>system.cpu.util[,system]</key>
+                    </item>
+                </graph_item>
+                <graph_item>
+                    <sortorder>3</sortorder>
+                    <drawtype>0</drawtype>
+                    <color>C8C8C8</color>
+                    <yaxisside>0</yaxisside>
+                    <calc_fnc>2</calc_fnc>
+                    <type>0</type>
+                    <item>
+                        <host>yhr</host>
+                        <key>system.cpu.util[,user]</key>
                     </item>
                 </graph_item>
             </graph_items>
