@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# by fishcried(wangtq@neunn.com) 2014.07.03
+# by fishcried(tianqing.w@gmail.com) 2014.07.03
 
 import urllib2
 import sys
@@ -61,7 +61,7 @@ def template_get(name, uri, auth):
     try:
         tid = output['result'][0]['templateid']
     except:
-        log.error("Get  template %s failed",name)
+        log.warning("Get  template %s failed",name)
         return None
     else:
         log.info("Get  template %s success",name)
@@ -81,7 +81,7 @@ def template_delete(tid, uri, auth):
     try:
         tid = output['result']['templateids'][0]
     except:
-        log.error("Delete  template %s failed", tid)
+        log.warning("Delete  template %s failed", tid)
         return None
     else:
         log.info("Delete  template %s success", tid)
@@ -102,7 +102,7 @@ def host_get(hostname, uri, auth):
     try:
         hid = output['result'][0]['hostid']
     except:
-        log.error("Get  host %s failed", hostname)
+        log.warning("Get  host %s failed", hostname)
         return None
     else:
         log.info("Get  host %s success", hostname)
@@ -161,7 +161,7 @@ def host_create(uri, auth, hostname, ip, groupid, templateid):
         try:
             hid = res['hostids']
         except:
-            log.error("Create host %s failed" ,hostname)
+            log.warning("Create host %s failed" ,hostname)
             return None
         else:
             log.info("Create host %s success" ,hostname)
@@ -169,7 +169,7 @@ def host_create(uri, auth, hostname, ip, groupid, templateid):
 
 def hgroup_get(uri, auth, groupname):
     if not groupname:
-        log.error("groupname is Null")
+        log.warning("groupname is Null")
         return None
 
     data = {'jsonrpc':'2.0',
@@ -188,7 +188,7 @@ def hgroup_get(uri, auth, groupname):
     try:
         groupids = output['result'][0]['groupid']
     except:
-        log.error("Get hostgroup %s failed",groupname)
+        log.warning("Get hostgroup %s failed",groupname)
         return None
     else:
         log.info("Get hostgroup %s success",groupname)
@@ -196,7 +196,7 @@ def hgroup_get(uri, auth, groupname):
 
 def hgroup_create(uri, auth, groupname):
     if not groupname:
-        log.error("groupname is Null")
+        log.warning("groupname is Null")
         return None
 
     data = {'jsonrpc':'2.0',
@@ -214,7 +214,7 @@ def hgroup_create(uri, auth, groupname):
     try:
         groupid = res['groupids'][0]
     except:
-        log.error("Create hostgroup %s failed", groupname)
+        log.warning("Create hostgroup %s failed", groupname)
         return None
     else:
         log.info("Create hostgroup %s success", groupname)
@@ -275,7 +275,7 @@ def screen_delete(sid, uri, auth):
     try:
         id = res['screenids'][0]
     except:
-        log.error("Delete %s failed", sid)
+        log.warning("Delete %s failed", sid)
         return None
     finally:
         log.info("Delete %s success", sid)
@@ -321,7 +321,7 @@ def screen_create(uri, auth, screen_name, graphids, columns):
         output = requestjson(uri, data)
         id  = output['result']['screenids']
     except Exception as e:
-        log.error("Create screen %s failed",screen_name)
+        log.warning("Create screen %s failed",screen_name)
         return None
     finally:
         log.info("Create screen %s Success",screen_name)
@@ -396,8 +396,49 @@ def config_import(uri, auth, file):
     if res:
         log.info("Import config %s success" ,file)
     else:
-        log.error("Import config %s failed" ,file)
+        log.warning("Import config %s failed" ,file)
     return
+
+def get_group_name(file):
+    g_name = ""
+
+    try:
+        dom = minidom.parse(file)
+    except Exception as e:
+        log.erro("Parse xml file %s faile:%s", file, e)
+        
+    root = dom.documentElement
+    for template in root.getElementsByTagName("templates"):
+        groups = template.getElementsByTagName("groups")
+        for group in groups:
+            namenode = group.getElementsByTagName("name")
+            if namenode:
+                g_name = namenode[0].childNodes[0].nodeValue
+                log.info("Get hostgroup \"%s\" from %s", g_name, file)
+                return g_name
+
+    log.info("Can't get hostgroup from %s", file)
+    return None
+
+def get_template_name(file):
+    t_name = ""
+
+    try:
+        dom = minidom.parse(file)
+    except Exception as e:
+        log.erro("Parse xml file %s faile:%s", file, e)
+
+    root = dom.documentElement
+    nodes = root.getElementsByTagName("template")
+    for templates in nodes:
+        names = templates.getElementsByTagName("name")
+        if names: 
+            t_name = names[0].childNodes[0].nodeValue
+            log.info("Get template name \"%s\" from %s", t_name, file)
+            return t_name
+
+    log.info("Can't get template from %s", file)
+    return None
 
 def main():
     user = 'Admin'
@@ -406,20 +447,21 @@ def main():
     uri = 'http://' + server + '/zabbix/api_jsonrpc.php'
     auth = login(uri, user, passwd)
 
-    # add hostgroup
-    gid = hgroup_get(uri, auth, hostgroup)
-    if not gid:
-        gid = hgroup_create(uri, auth, hostgroup)
-
+    # import template
     tid = template_get(template_name, uri, auth)
     if tid:
         log.warning("Template %s exist, delete it", template_name)
         template_delete(tid, uri, auth)
-
-    # import template
     config_import(uri, auth, templatefile)
     tid = template_get(template_name, uri, auth)
 
+    '''
+    # add hostgroup
+    gid = hgroup_get(uri, auth, hostgroup)
+    if not gid:
+        gid = hgroup_create(uri, auth, hostgroup)
+    '''
+    gid = hgroup_get(uri, auth, hostgroup)
 
     # 3 create screen for each hosts
     with open(hostsfile, 'r') as fp:
@@ -456,21 +498,6 @@ def main():
         
         log.info("Finish")
 
-def get_template_name(file):
-
-    dom = minidom.parse(file)
-    root = dom.documentElement
-
-    template = root.getElementsByTagName("template")
-    t_name = ""
-    for t in template:
-        tt = t.getElementsByTagName("name")
-        if tt: 
-            t_name = tt[0].childNodes[0].nodeValue
-            log.info("Get template name %s from %s", t_name, file)
-            break
-    return t_name
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Auto config zabbix server. \
             1 auto add hosts to zabbix server.\
@@ -480,22 +507,27 @@ if __name__ == '__main__':
     parser.add_argument('-T', '--template', dest='templatefile', type=str, default=os.path.join("conf","template.xml"), help="templates xml file", required=False)
     parser.add_argument('-c', '--columns', dest='columns', default=3, type=int, help="number of columns in the screen", required=False)
     parser.add_argument('-S', '--ip', dest='server', type=str, help="zabbix server ip", required=True)
-    parser.add_argument('-g', '--groupname', dest='groupname', default="yhr_group", type=str, help="hostgroup name", required=False)
     parser.add_argument("-d", "--debug", help="Display debug messages", required=False)
     parser.add_argument("-q", "--quie", help="Display only error or warn messages", required=False)
 
 
     args = parser.parse_args()
-
     init_log(args)
-
     log.debug("args:%s", args)
 
     server = args.server
     hostsfile = args.hostsfile
-    hostgroup = args.groupname
     columns = args.columns
+
+    #hostgroup = args.groupname
     templatefile = args.templatefile
+    hostgroup = get_group_name(templatefile)
+    if not hostgroup:
+        log.error("Not found hostgroup in template %s", templatefile)
+        exit(1)
     template_name = get_template_name(templatefile)
+    if not template_name:
+        log.error("Not found templatename in template %s", templatefile)
+        exit(1)
 
     main()

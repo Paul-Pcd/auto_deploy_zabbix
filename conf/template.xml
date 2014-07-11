@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>2.0</version>
-    <date>2014-07-09T01:50:32Z</date>
+    <date>2014-07-11T01:22:36Z</date>
     <groups>
         <group>
-            <name>Virtual machines</name>
+            <name>neunn</name>
         </group>
     </groups>
     <templates>
         <template>
-            <template>yhr</template>
-            <name>yhr</name>
+            <template>Neunn</template>
+            <name>Neunn</name>
             <groups>
                 <group>
-                    <name>Virtual machines</name>
+                    <name>neunn</name>
                 </group>
             </groups>
             <applications>
@@ -482,7 +482,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>yhr</host>
+                        <host>Neunn</host>
                         <key>system.cpu.util[,interrupt]</key>
                     </item>
                 </graph_item>
@@ -494,7 +494,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>yhr</host>
+                        <host>Neunn</host>
                         <key>system.cpu.util[,iowait]</key>
                     </item>
                 </graph_item>
@@ -506,7 +506,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>yhr</host>
+                        <host>Neunn</host>
                         <key>system.cpu.util[,system]</key>
                     </item>
                 </graph_item>
@@ -518,7 +518,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>yhr</host>
+                        <host>Neunn</host>
                         <key>system.cpu.util[,user]</key>
                     </item>
                 </graph_item>
@@ -550,7 +550,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>yhr</host>
+                        <host>Neunn</host>
                         <key>vfs.dev.read[,sectors]</key>
                     </item>
                 </graph_item>
@@ -562,7 +562,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>yhr</host>
+                        <host>Neunn</host>
                         <key>vfs.dev.write[,sectors]</key>
                     </item>
                 </graph_item>
@@ -594,7 +594,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>yhr</host>
+                        <host>Neunn</host>
                         <key>vfs.dev.write[,ops]</key>
                     </item>
                 </graph_item>
@@ -606,7 +606,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>yhr</host>
+                        <host>Neunn</host>
                         <key>vfs.dev.read[,ops]</key>
                     </item>
                 </graph_item>
@@ -638,7 +638,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>yhr</host>
+                        <host>Neunn</host>
                         <key>net.if.out[eth0,bytes]</key>
                     </item>
                 </graph_item>
@@ -650,7 +650,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>yhr</host>
+                        <host>Neunn</host>
                         <key>net.if.in[eth0,bytes]</key>
                     </item>
                 </graph_item>
