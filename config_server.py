@@ -338,7 +338,7 @@ def init_log(args):
     log.setLevel(level)
     if not os.path.exists("log"):
         os.mkdir("log")
-    fh = logging.FileHandler(os.path.join('log','add_host.log'))
+    fh = logging.FileHandler(os.path.join('log','config_server.log'))
     fh.setLevel(level)
 
     ch = logging.StreamHandler()
